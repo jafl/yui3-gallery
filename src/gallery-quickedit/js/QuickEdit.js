@@ -562,6 +562,13 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 			changes.push(change);
 
 			var field_count = list.size();
+
+			for (var j=0; j<alwaysInclude.length; j++)
+			{
+				var key     = alwaysInclude[j];
+				change[key] = rec.getValue(key);
+			}
+
 			for (var j=0; j<field_count; j++)
 			{
 				var field = list.item(j);
@@ -576,12 +583,6 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 				{
 					change[key] = val;
 				}
-			}
-
-			for (var j=0; j<alwaysInclude.length; j++)
-			{
-				var key     = alwaysInclude[j];
-				change[key] = rec.getValue(key);
 			}
 		}
 
