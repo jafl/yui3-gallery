@@ -168,8 +168,13 @@
 				this.anim.set('from',{left:(this.from? this.from : this.baseX)});
 				this.anim.set('to',{left:this.to});
 				this.anim.run();
-				this.src.set('checked',!this.src.get('checked'));
-				Y.log("New value: " + this.src.get('checked'));
+
+				var origVal = this.src.get('checked'),
+					newVal = !origValue;
+				this.src.set('checked',newVal);
+				this.fire('change',{origVal:origVal,newVal:newVal});
+
+				Y.log("New value: " + newVal);
 			},
 			_replacePx : function(el){
 				return parseInt(el.replace('px',''));
