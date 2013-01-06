@@ -5,9 +5,7 @@
  * @static
  */
 
-var WIDTH_CHANGE = 'widthChange',
-
-    PREFIX = 'bcr_',
+var PREFIX = 'bcr_',
 
     CLASSES = {
         INDEXBOX: PREFIX + 'indexbox',
@@ -219,7 +217,7 @@ Carousel = Y.Base.create('btcarousel', Y.ScrollView, [Y.Bottle.SyncScroll, Y.zui
         },
 
         /**
-         * Display left button and right botton when set to true.
+         * Display left button and right button when set to true.
          *
          * @attribute showButtons
          * @type Boolean
