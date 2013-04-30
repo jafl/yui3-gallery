@@ -331,7 +331,7 @@ QuickEdit.copyDownFormatter = function(o, td)
 {
 	if (o.column.quickEdit.copyDown && o.rowIndex === 0)
 	{
-		return Y.Lang.sub('<button title="Copy down" class="{c}">&darr;</button>',
+		return Y.Lang.sub('<button type="button" title="Copy down" class="{c}">&darr;</button>',
 		{
 			c: QuickEdit.copy_down_button_class
 		});
@@ -425,7 +425,12 @@ function validateElements(
 	var count  = list.size();
 	for (var i=0; i<count; i++)
 	{
-		var e  = list.item(i);
+		var e = list.item(i);
+		if (!Y.DOM.hasClass(e, 'quickedit-field'))
+		{
+			continue;
+		}
+
 		var qe = this.column_map[ this._getColumnKey(e) ].quickEdit;
 		if (!qe)
 		{
@@ -801,7 +806,7 @@ Y.namespace("Plugin");
 Y.Plugin.DataTableQuickEdit = QuickEdit;
 
 
-}, '@VERSION@', {
+}, 'gallery-2013.04.03-19-53', {
     "skinnable": "true",
     "requires": [
         "datatable-base",

@@ -11,11 +11,11 @@
  * @class SyncScroll
  * @namespace Bottle
  * @constructor
- * @param [config] {Object} Object literal with initial attribute values
  */
 var  WIDTH_CHANGE = 'widthChange',
+     SYNC_SCREEN = 'btSyncScreen',
 
-SyncScroll = function (config) {
+SyncScroll = function () {
     var firstInit = false,
         that = this;
     Y.once('btReady', function () {
@@ -85,7 +85,7 @@ SyncScroll.prototype = {
 
             // sync width with screen width
             if (!pg || pg.get('nativeScroll')) {
-                hs.push(Y.on('btSyncScreen', Y.bind(V, this)));
+                hs.push(Y.on(SYNC_SCREEN, Y.bind(V, this)));
             }
 
             this._bssHandle = new Y.EventHandle(hs);

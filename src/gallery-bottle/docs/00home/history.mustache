@@ -2,8 +2,66 @@
 <h3>nighty</h3>
 <h4>for test, only on github, not on cdn</h4>
 <ul>
+ <li>container: fix for IE7 marginTop bug</li>
+ <li>pushpop: move nativeScroll attrs/functions from page to pushpop</li>
+ <li>core: remove topScroll support</li>
+ <li>container: remove disabled scrollView when in nativeScroll mode to boost performance for page widget</li>
+ <li>device: improve positionFixed detection</li>
+ <li>device: add scrollTo support</li>
+ <li>device: add getScrollBase support</li>
+ <li>device: add getScrollY support</li>
+ <li>pushpop: add scrollTo support</li>
+ <li>page: move scrollTo, getScrollY support to pushpop or device</li>
+ <li>shortcut: start to support nativeScroll</li>
+ <li>overlay: start to support nativeScroll</li>
+ <li>container: support updateContentSize</li>
+ <li>pushpop: support updateContentSize</li>
+</ul>
+
+<h3>0.2.0</h3>
+<h4>2013-02-28</h4>
+<ul>
+ <li>container: fix for scroll into hidden region bug in IE7</li>
+ <li>shortcut: fix for zIndex bug in IE7</li>
+ <li>carousel: fix for layout issue in IE7</li>
+ <li>container: fix for overlaped region with fixed header in IE7</li>
+ <li>page: add getScrollY static mathod</li>
+ <li>page: add onScroll static mathod</li>
+ <li>core: fix js error in nativeScroll mode</li>
+ <li>photogrid: support bpg_render class name switching</li>
+ <li>photogrid: support bpg_error class name on module when image error</li>
+ <li>overlay: fix for iphone scrollTo(0,0) bug when hide overlay</li>
+ <li>page: fix nativeScroll mode for IE10 touch device</li>
+ <li>overlay: stop scrollBar support for none touch device</li>
+ <li>core: tested and works well on windows phone now</li>
+</ul>
+
+<h3>0.1.8</h3>
+<h4>2013-02-13</h4>
+<ul>
+ <li>carousel: fix for no _cAxis bug</li>
+ <li>slidetab: fix for no _cAxis bug</li>
+ <li>core: fix styles for IE7</li>
+</ul>
+
+<h3>0.1.7</h3>
+<h4>2013-02-07</h4>
+<ul>
+ <li>core: yogi migration, now build with yogi</li>
+ <li>core: support yui 3.7+</li>
+ <li>pushpop: fix for push then pop soon then js error bug</li>
+ <li>ui components: add a new component - switcher</li>
+ <li>photogrid: fix for append bug when column height larger then 9999 pixels</li>
+ <li>overlay: fix position shifting bug when native page size changed bug</li>
+ <li>page: fix mousewheel blocked bug when in native scroll mode</li>
+ <li>container: fix for desktop scrollview stop scrolling bug</li>
+ <li>core: better page layout when running desktop (hidden overlay and shortcut will not take place of a page before init)</li>
+</ul>
+
+<h3>0.1.6</h3>
+<h4>2012-12-20</h4>
+<ul>
  <li>all: lots of jslint fix</li>
- <li>core: tested with YUI 3.8.0</li>
  <li>photogrid: fix for IE9 rendering problem</li>
 </ul>
 

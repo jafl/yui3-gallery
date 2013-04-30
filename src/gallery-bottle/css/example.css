@@ -1,6 +1,7 @@
 /* Skin */
 /* TODO: later this will be moved into a css module: bottle-skin-black */
-[data-role="overlay"] .yui3-btcontainer, [data-role="shortcut"] .yui3-btcontainer{background:url(bd_bg.png) repeat 0 0;color:#fff;font-weight:bold;}
+.dummy {background:#f00}
+[data-role="overlay"], [data-role="shortcut"]{background:url(bd_bg.png) repeat 0 0;color:#fff;font-weight:bold;}
 [data-role="overlay"] ul li, [data-role="shortcut"] ul li{padding:7px 0;border-bottom:1px solid #404040;color:#aeadad;font-weight:bold;}
 [data-role="overlay"] ul li h2, [data-role="shortcut"] ul li h2{padding-left:8px;font-weight:bold;}
 [data-role="overlay"] ul li.divider, [data-role="shortcut"] ul li.divider{padding:3px 0;color:#C9BEAA;font-weight:bold;font-size:11px;background:none;background-color:#333;}
@@ -10,6 +11,7 @@
 .bpg_module img {display:block;width:100%;position:relative;z-index:-1;background:#a44}
 .bpg_module h1 {font-weight:900;margin:3px}
 .bpg_module p {font-style:italic;margin:3px}
+.bpg_render {background-color:#ffc}
 
 /*User Defined*/
 .bd{color:#333;font-weight:bold;}

@@ -48,10 +48,13 @@ Code Sample
     // Install placeholder for all input and textarea exist in this page
     Y.zui.placeholder.install();
 
+    // Same as previous
+    Y.zui.placeholder.install('input, textarea');
+
     // Install placeholder for some elements by css selector
     Y.zui.placeholder.install('div.required input');
 
-    // hanlde dynamic generated inputs before insert into document
+    // handle dynamic generated inputs before insert into document
     Y.zui.placeholder.install(new_div.all('input, textarea'));
     someplace.append(new_div);
 

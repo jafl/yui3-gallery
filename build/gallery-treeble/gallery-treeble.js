@@ -1161,4 +1161,4 @@ Y.extend(Treeble, Y.DataTable,
 Y.Treeble = Treeble;
 
 
-}, '@VERSION@', {"skinnable": "true", "requires": ["datasource", "datatable"]});
+}, 'gallery-2013.04.03-19-53', {"skinnable": "true", "requires": ["datasource", "datatable"]});

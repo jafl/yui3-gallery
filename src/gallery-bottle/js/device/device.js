@@ -13,6 +13,9 @@
  * @namespace Bottle
  */
 var positionFixedSupport = null,
+    touchSupport = null,
+
+    scrollBase,
 
     Device = {
 
@@ -55,7 +58,7 @@ var positionFixedSupport = null,
      * @return {Boolean}
      */
     getTouchSupport: function () {
-        return ((Y.config.win && ('ontouchstart' in Y.config.win)) && !(Y.UA.chrome && Y.UA.chrome < 6));
+        return touchSupport;
     },
 
     /**
@@ -70,7 +73,11 @@ var positionFixedSupport = null,
         if (positionFixedSupport !== null) {
             return positionFixedSupport;
         }
-        
+
+        if (Y.UA.chrome >= 4 || Y.UA.android >= 2.2 || Y.UA.ios >= 5) {
+            return (positionFixedSupport = true);
+        }
+
         positionFixedParent = Y.one('.bt_posfixed') || Y.one('body').appendChild('<div class="bt_posfixed"><div><span></span></div></div>');
         py = positionFixedParent.one('div').set('scrollTop', '30px').one('span').getY();
         positionFixedParent.remove();
@@ -84,7 +91,9 @@ var positionFixedSupport = null,
      * @method getDeviceWidth
      * @return {Number} an integer
      */
-    getDeviceWidth: function () { return screen.width; },
+    getDeviceWidth: function () {
+        return screen.width;
+    },
 
     /**
      * get current Device Height in pixel
@@ -114,8 +123,51 @@ var positionFixedSupport = null,
      */
     getBrowserHeight: function () {
         return window.innerHeight || document.documentElement.clientHeight;
+    },
+
+    /**
+     * get current Browser scrolling base element
+     * @static
+     * @method getScrollBase
+     * @return {Node} browser scrolling element
+     */
+    getScrollBase: function () {
+        return scrollBase;
+    },
+
+    /**
+     * get current Browser scrolling position Y
+     * @static
+     * @method getScrollY
+     * @return {Number} browser scrolling position
+     */
+    getScrollY: function () {
+        return touchSupport ? scrollBase.get('scrollTop') : Y.DOM.docScrollY();
+    },
+
+    /**
+     * make browser scroll to position X, Y
+     * @static
+     * @method scrollTo
+     * @param X {Number} scroll to X position
+     * @param Y {Number} scroll to Y position
+     */
+    scrollTo: function (X, Y) {
+         if (touchSupport) {
+             scrollBase.set('scrollLeft', X).set('scrollTop', Y);
+         } else {
+             window.scrollTo(X, Y);
+         }
     }
 };
+
+touchSupport = (
+    ((Y.config.win && ('ontouchstart' in Y.config.win))
+    || (Y.config.win && ('msPointerEnabled' in Y.config.win.navigator))
+    ) && !(Y.UA.chrome && Y.UA.chrome < 6)
+);
+
+scrollBase = touchSupport ? Y.one('body') : Y.one('html');
 
 //init data
 if (Y.UA.iphone) {
