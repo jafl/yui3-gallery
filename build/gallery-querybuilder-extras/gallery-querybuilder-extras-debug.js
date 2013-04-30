@@ -337,4 +337,4 @@ Y.QueryBuilder.Calendar.prototype = {
 Y.QueryBuilder.plugin_mapping.calendar = Y.QueryBuilder.Calendar;
 
 
-}, 'gallery-2012.08.08-20-03' ,{requires:['calendar','datatype-date','gallery-overlay-extras','gallery-querybuilder'], skinnable:true});
+}, '@VERSION@' ,{requires:['calendar','datatype-date','gallery-overlay-extras','gallery-querybuilder'], skinnable:true});
