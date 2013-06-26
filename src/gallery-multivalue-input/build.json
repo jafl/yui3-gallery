@@ -2,7 +2,7 @@
     "name": "gallery-multivalue-input",
     "builds": {
         "gallery-multivalue-input": {
-            "config": {
+        	"config": {
                 "skinnable": "true",
                 "requires": [
                     "plugin",

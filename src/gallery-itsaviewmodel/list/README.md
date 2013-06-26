@@ -45,16 +45,16 @@ You can use css to style (f.i. hide) these node at will.
 
 Available plugins
 -----------------
-* [Y.Plugin.ITSAScrollViewKeyNav](src/gallery-itsascrollviewkeynav) <i>to support key navigation/scrolling</i>
-* [Y.Plugin.ITSASubscribeModelButtons](src/gallery-itsasubscribemodelbuttons) <i>make models fire model:buttonclick and model:anchorclick events-</i>
-* [Y.Plugin.ITSAChangeModelTemplate](src/gallery-itsachangemodeltemplate) <i>enables models to toggle templates, either a second template or an editabletemplate</i>
-* [Y.Plugin.ITSAViewPaginator](src/gallery-itsaviewpaginator) <i>under construction</i>
-* [Y.Plugin.ITSAInfiniteView](src/gallery-itsaviewpaginator) <i>under construction</i>
-* [Y.Plugin.ITSAScrollViewLoop](src/gallery-itsascrollviewloop) <i>under construction</i>
+* [Y.Plugin.ITSAScrollViewKeyNav](../gallery-itsascrollviewkeynav) <i>to support key navigation/scrolling</i>
+* [Y.Plugin.ITSASubscribeModelButtons](../gallery-itsasubscribemodelbuttons) <i>make models fire model:buttonclick and model:anchorclick events-</i>
+* [Y.Plugin.ITSAChangeModelTemplate](../gallery-itsachangemodeltemplate) <i>enables models to toggle templates, either a second template or an editabletemplate</i>
+* [Y.Plugin.ITSAViewPaginator](../gallery-itsaviewpaginator) <i>under construction</i>
+* [Y.Plugin.ITSAInfiniteView](../gallery-itsaviewpaginator) <i>under construction</i>
+* [Y.Plugin.ITSAScrollViewLoop](../gallery-itsascrollviewloop) <i>under construction</i>
 
 Available extentions
 --------------------
-* [Y.Plugin.ITSAScrollViewDupModels](src/gallery-itsascrollviewdupmodels) <i>to support duplicated models, based on a Date-interval</i>
+* [Y.Plugin.ITSAViewDupModels](../gallery-itsaviewdupmodels) <i>to support duplicated models, based on a Date-interval</i>
 
 Examples
 --------
@@ -72,7 +72,7 @@ Usage
 <div id='myscrollview' class='itsa-modellistview-noinitialitems'></div>
 ```
 ```js
-YUI({gallery: 'gallery-2013.02.27-21-03'}).use('scrollview', 'gallery-itsaviewmodellist', 'lazy-model-list', function(Y) {
+YUI({gallery: 'gallery-2013.02.27-21-03'}).use('gallery-itsaviewmodellist', 'lazy-model-list', function(Y) {
 var myModellist, rendermodel, groupheader, myView;
 
 myModellist = new Y.LazyModelList();
@@ -136,10 +136,10 @@ myView.render();
 
 <b>View with a filter on the modellist</b>
 ```html
-<div id='myscrollview' class='itsa-modellistview-noinitialitems'></div>
+<div id='myview' class='itsa-modellistview-noinitialitems'></div>
 ```
 ```js
-YUI({gallery: 'gallery-2013.02.27-21-03'}).use('scrollview', 'gallery-itsaviewmodellist', 'lazy-model-list', function(Y) {
+YUI({gallery: 'gallery-2013.02.27-21-03'}).use('gallery-itsaviewmodellist', 'lazy-model-list', function(Y) {
 var myModellist, rendermodel, groupheader, myView, filter;
 
 myModellist = new Y.LazyModelList();
@@ -158,8 +158,7 @@ filter = function(model) {
 };
 
 myView = new Y.ITSAViewModellist({
-    boundingBox: "#myscrollview",
-    height:'600px',
+    boundingBox: "#myview",
     width:'240px',
     modelTemplate: rendermodel,
     groupHeader1: groupheader,

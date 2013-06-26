@@ -92,7 +92,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Panel
          * @since 0.1
         */
-        panel : null,
 
         /**
          * Reference to the Y.Calendar-instance
@@ -101,7 +100,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Calendar
          * @since 0.1
         */
-        calendar : null,
 
         /**
          * Reference to the Y.Dial-instance
@@ -110,7 +108,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Dial
          * @since 0.1
         */
-        timedial : null,
 
         /**
          * Internal reference to the closebutton.
@@ -120,7 +117,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _closebutton : null,
 
         /**
          * Internal reference to the dialhandle-Node.
@@ -130,7 +126,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _dialHandle : null,
 
         /**
          * Internal list of all eventhandlers bound by this widget.
@@ -140,7 +135,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Array
          * @since 0.1
         */
-        _eventhandlers : [],
 
         /**
          * Internal reference to the timerobject that is used to delay the rendering.
@@ -150,7 +144,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Object
          * @since 0.1
         */
-        _panelRendererDelay : null,
 
         /**
          * Internal reference to the resetnode.
@@ -160,7 +153,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _resetNode : null,
 
         /**
          * Internal property that holds the format of how the Dial-time should be rendered in the Dial-instance.
@@ -170,7 +162,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type String
          * @since 0.1
         */
-        _timeFormat : null,
 
         /**
          * Reference to the Node inside Y.Dial-instance that draws the selected time.
@@ -180,7 +171,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _timeNode : null,
 
         /**
          * Internal backupstate of getTime()'s config.selectOnRelease.
@@ -190,7 +180,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _timepickerSelectOnRelease : null,
 
         /**
          * Internal state of the picker to be closable or not
@@ -200,7 +189,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Boolean
          * @since 0.1
         */
-        _unclosable : null,
 
         /**
          * Reference to Y.one('window')
@@ -210,7 +198,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
          * @type Y.Node
          * @since 0.1
         */
-        _window : null,
 
         /**
          * @method initializer
@@ -220,6 +207,7 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
         initializer : function() {
             var instance = this;
 
+            instance._eventhandlers = [];
             instance._window = Y.one('window');
             instance._renderUI();
             instance._bindUI();
@@ -293,8 +281,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                             selectedDate.setHours(0);
                             instance.hide(true, true);
                             resolve(selectedDate);
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                     rejecthandler = Y.once(
@@ -305,8 +291,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                             // just for sure, also hide the calendarinstance
                             instance.calendar.hide();
                             reject(new Error('canceled'));
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                 }
@@ -367,8 +351,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                             selectedDateTime.setHours(newHours);
                             instance.hide(true, true);
                             resolve(selectedDateTime);
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                     rejecthandler = Y.once(
@@ -380,8 +362,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                             instance.calendar.hide();
                             instance._toggleTimePicker(false, false);
                             reject(new Error('canceled'));
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                 }
@@ -429,8 +409,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                                 selectedTime = new Date(1900, 0, 1, newHours, newMinutes, 0, 0);
                             instance.hide(true, true);
                             resolve(selectedTime);
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                     rejecthandler = Y.once(
@@ -441,8 +419,6 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                             // just for sure, also hide the calendarinstance
                             instance._toggleTimePicker(false, false);
                             reject(new Error('canceled'));
-                            // we don't want closures: 'null' the promise
-                            promise = null;
                         }
                     );
                 }
@@ -528,7 +504,7 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                     eventhandlers.push(
                         closebutton.on(
                             'click',
-                            function(e) {
+                            function() {
                                 /**
                                 * Fired when the Panel is closed without saving the values.
                                 * No need to listen to --> the promises are using this event internally.
@@ -620,7 +596,7 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                     );
                 }
             );
-            timedial.render(contentBox.one('#'+TIMEDIAL_ID));
+            timedial.render(contentBox.one('.'+TIMEDIAL_ID));
             instance._eventhandlers.push(
                 timedial.after(
                     'valueChange',
@@ -668,7 +644,7 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                     Y.rbind(instance._calendarNewDate, instance)
                 )
             );
-            instance.calendar.render(instance.panel.get('contentBox').one('#'+CALENDAR_ID));
+            instance.calendar.render(instance.panel.get('contentBox').one('.'+CALENDAR_ID));
         },
 
         /**
@@ -770,7 +746,7 @@ Y.ITSADateTimePicker = Y.Base.create('itsadatetimepicker', Y.Base, [], {
                 render  : false, // we will render after some delaytime, specified with RENDERDELAY
                 fillHeight: null,
                 hideOn: [],
-                bodyContent : '<div id="'+CALENDAR_ID+'"></div><div id="'+TIMEDIAL_ID+'"></div>'
+                bodyContent : '<div class="'+CALENDAR_ID+'"></div><div class="'+TIMEDIAL_ID+'"></div>'
             });
         },
 
@@ -1077,7 +1053,7 @@ if (!Y.Global.ItsaDateTimePicker) {
 
 Y.ItsaDateTimePicker = Y.Global.ItsaDateTimePicker;
 
-}, 'gallery-2013.04.24-22-00', {
+}, 'gallery-2013.06.26-23-09', {
     "requires": [
         "base",
         "node-base",
