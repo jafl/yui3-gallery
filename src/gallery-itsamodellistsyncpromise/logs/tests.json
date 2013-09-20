@@ -5,7 +5,7 @@
     "errors": 0,
     "ignored": 0,
     "total": 3,
-    "duration": 18,
+    "duration": 12,
     "type": "report",
     "Automated Tests": {
         "name": "Automated Tests",
@@ -14,7 +14,7 @@
         "errors": 0,
         "ignored": 0,
         "total": 1,
-        "duration": 5,
+        "duration": 3,
         "type": "testcase",
         "test is empty": {
             "result": "fail",
@@ -24,6 +24,6 @@
             "duration": 1
         }
     },
-    "timestamp": "Wed 26 Jun 2013 03:59:33 PM PDT",
+    "timestamp": "Wed 14 Aug 2013 05:32:03 PM PDT",
     "consoleInfo": []
 }

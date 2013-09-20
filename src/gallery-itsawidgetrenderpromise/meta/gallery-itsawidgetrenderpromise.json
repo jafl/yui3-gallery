@@ -2,7 +2,8 @@
     "gallery-itsawidgetrenderpromise": {
         "requires": [
             "yui-base",
-            "widget",
+            "yui-later",
+            "widget-base",
             "promise"
         ]
     }
