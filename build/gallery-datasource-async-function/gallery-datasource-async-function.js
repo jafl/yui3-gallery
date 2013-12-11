@@ -84,7 +84,7 @@ Y.extend(AsyncFunctionDataSource, Y.DataSource.Local,
 		{
 			try
 			{
-				fn(Y.bind(callback, this), e.request, this, e);
+				fn.call(this, Y.bind(callback, this), e.request, this, e);
 			}
 			catch (ex)
 			{
@@ -105,4 +105,4 @@ Y.extend(AsyncFunctionDataSource, Y.DataSource.Local,
 Y.DataSource.AsyncFunction = AsyncFunctionDataSource;
 
 
-}, '@VERSION@', {"requires": ["datasource-local"]});
+}, 'gallery-2013.10.24-18-05', {"requires": ["datasource-local"]});

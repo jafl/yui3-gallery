@@ -1,3 +1,9 @@
+/*
+Copyright 2013 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+
 YUI.add('gallery-pathogen-encoder', function (Y, NAME) {
 
 var resolve = Y.Loader.prototype.resolve,
@@ -46,7 +52,16 @@ Y.Loader.prototype.buildCombo = function (groups, comboBase, comboTail) {
         while (modules.length) {
             prepend = currDelim + currKey;
             prepend = prepend ? prepend + SUB_GROUP_DELIM : MODULE_DELIM;
-            token   = prepend + modules[0];
+
+            // Since modules with custom paths are treated as their own
+            // segment, we override the prepend value so that it is only ever
+            // set to the group delimiter. TODO: refactor this while loop into
+            // one with multiple if-statements to make it easier to read.
+            if (group.key.indexOf('path') === 0) {
+                prepend = currDelim;
+            }
+
+            token = prepend + modules[0];
 
             if (currLen + token.length < maxURLLength) {
                 comboUrl += token;
@@ -80,9 +95,8 @@ core and gallery groups, and just "$root" for all other groups.
 Y.Loader.prototype.aggregateGroups = function (modules) {
     var source = {},
         galleryMatch,
-        comboBase,
-        version,
-        group,
+        compressed,
+        prefixTree,
         meta,
         name,
         mod,
@@ -90,16 +104,15 @@ Y.Loader.prototype.aggregateGroups = function (modules) {
         len,
         i;
 
-    // Group all the modules for efficient combo encoding.
+    // Segment the modules for efficient combo encoding.
     for (i = 0, len = modules.length; i < len; i += 1) {
         mod     = modules[i];
-        group   = mod.group;
         name    = mod.name;
 
         // Skip modules that should be loaded singly. This is kind of confusing
         // because it mimics the behavior of the loader (also confusing):
         // https://github.com/ekashida/yui3/blob/632167a36d57da7a884aacf0f4488dd5b8619c7c/src/loader/js/loader.js#L2563
-        meta = this.groups && this.groups[group];
+        meta = this.groups && this.groups[mod.group];
         if (meta) {
             if (!meta.combine || mod.fullpath) {
                 continue;
@@ -111,65 +124,299 @@ Y.Loader.prototype.aggregateGroups = function (modules) {
             continue;
         }
 
-        // YUI core module group. Assumption: core modules are the only ones
-        // that don't declare its group name.
-        if (!group) {
-            version = YUI.version;
-            group   = 'core';
+        // YUI core modules => core group
+        if (!mod.group) {
+            key = 'c' + SUB_GROUP_DELIM + YUI.version;
         }
-        // YUI gallery module group.
-        else if (group === 'gallery') {
+        // YUI gallery modules => gallery group
+        else if (mod.group === 'gallery') {
             if (!galleryVersion) {
                 galleryMatch   = GALLERY_RE.exec(this.groups.gallery.root);
                 galleryVersion = galleryMatch && galleryMatch[1];
             }
-            version = galleryVersion;
-            name    = name.split('gallery-').pop(); // remove prefix
+            name = name.split('gallery-').pop(); // remove prefix
+            key  = 'g' + SUB_GROUP_DELIM + galleryVersion;
         }
-        // All other YUI module groups.
-        else {
-            comboBase = meta.comboBase;
+        // If the module was built the YUI way, then we segment these modules
+        // into the `root` group.
+        else if (mod.path.indexOf(name + '/' + name) === 0) {
+            key = meta.root;
 
-            // Combo base is not set or the combo base is unrecognized.
-            if (
-                !comboBase ||
-                comboBase.indexOf('.yimg.com/zz/combo?') === -1
-            ) {
+            // Trim '/' from both ends.
+            if (key[0] === '/') {
+                key = key.slice(1);
+            }
+            if (key[key.length - 1] === '/') {
+                key = key.slice(0, -1);
+            }
+
+            key = 'r' + SUB_GROUP_DELIM + key;
+        }
+        // If the path does not follow the YUI build convention, then we
+        // add them to the prefix tree and subsequently segment these modules
+        // into the `path` group.
+        else {
+            // remove file extension
+            name = mod.path.split(EXTENSION_RE).shift();
+
+            if (meta && meta.root) {
+                name = meta.root + name;
+            }
+
+            if (name[0] === '/') {
+                name = name.slice(1);
+            }
+
+            // If fullpath compression is enabled, add this module's fullpath
+            // to the prefix tree for later compression
+            if (Y.config.fullpathCompression) {
+                prefixTree = prefixTree || new PrefixTree({
+                    rootPrefix:     'p+',
+                    moduleDelim:    MODULE_DELIM,
+                    subgroupDelim:  SUB_GROUP_DELIM,
+                    groupDelim:     GROUP_DELIM
+                });
+                prefixTree.add(name);
                 continue;
             }
 
-            version = meta.root;
-            group   = '';
-            name    = name.split(EXTENSION_RE).shift(); // remove extension
-
-            // Trim '/' from both ends of the version (root).
-            if (version[version.length - 1] === '/') {
-                version = version.slice(0, -1);
-            }
-            if (version[0] === '/') {
-                version = version.slice(1);
-            }
+            // Tag this module as `path` so that we know to include the
+            // full path in the combo url later on
+            key = 'path' + SUB_GROUP_DELIM + name;
         }
 
-        // Segment core/gallery modules by group and version, and all other
-        // modules by root:
-        // YUI core:    `core+3.12.0`
-        // YUI gallery: `gallery+2013.06.20-02-07`
-        // YUI etc:     `os/mit/td/td-applet-weather-0.0.86`
-        key = group ? group + SUB_GROUP_DELIM + version : version;
         source[key] = source[key] || [];
-
         source[key].push(name);
 
+        // If fallback feature is enabled, record the full module name as seen
         if (Y.config.customComboFallback) {
-            if (group === 'gallery') {
+            if (mod.group === 'gallery') {
                 name = 'gallery-' + name;
             }
             this.pathogenSeen[name] = true;
         }
     }
 
+    if (prefixTree) {
+        compressed = prefixTree.compress();
+        for (i = 0, len = compressed.length; i < len; i += 1) {
+            key = 'p' + SUB_GROUP_DELIM + compressed[i].root;
+            source[key] = source[key] || [];
+            source[key].push(compressed[i].name);
+        }
+
+        // clean up
+        prefixTree.destroy();
+        prefixTree = null;
+    }
+
     return source;
+};
+
+/**
+A class that represents a prefix tree data structure for file paths. The main
+purpose of this class is to optimally compress itself when the added paths need
+to be serialized.
+@class PrefixTree
+@constructor
+**/
+function PrefixTree (config) {
+    this.tree = {
+        weight: Number.MAX_VALUE,
+        path: '/',
+        children: {}
+    };
+
+    this.rootPrefixLen     = config.rootPrefix.length    || 0;
+    this.moduleDelimLen    = config.moduleDelim.length   || 0;
+    this.subgroupDelimLen  = config.subgroupDelim.length || 0;
+    this.groupDelimLen     = config.groupDelim.length    || 0;
+}
+
+PrefixTree.prototype = {
+
+    /**
+    Adds a path to the prefix tree instance. Calculates the weight of each node
+    as paths are added. The weight of a node represents the number of
+    characters in the the path value of the node, combined with the number of
+    characters in the path value of each of its children's paths (relative to
+    the node's path value).
+    @method add
+    @param {String} fullpath A path
+    **/
+    add: function (fullpath) {
+        var currentNode = this.tree,
+            remaining   = fullpath.split('/'),
+            traversed   = [],
+            remainingPath,
+            traversedPath,
+            child,
+            part;
+
+        while (remaining.length) {
+            part  = remaining.shift();
+            child = currentNode.children[part];
+
+            traversed.push(part);
+            remainingPath = remaining.join('/');
+
+            if (!child) {
+                traversedPath = traversed.join('/');
+
+                child = currentNode.children[part] = {
+                    path: traversedPath,
+                    weight: 0
+                };
+
+                // If not leaf node
+                if (remainingPath) {
+                    child.weight += traversedPath.length + remainingPath.length;
+
+                    // Account for the length of the subgroup delimiter
+                    child.weight += this.subgroupDelimLen;
+
+                    child.children = {};
+                } else {
+                    // Guarantee that leaf nodes will never be roots
+                    child.weight = Number.MAX_VALUE;
+                }
+            } else {
+                // Account for the length of the module delimiter
+                child.weight += this.moduleDelimLen + remainingPath.length;
+            }
+
+            // bubble down
+            currentNode = child;
+        }
+
+    },
+
+    /**
+    Compresses the prefix tree. Uses a depth-first search to find the optimal
+    set of roots to serialize all the added paths.
+    @method compress
+    @return {Array} compressed An array of (root path, module path) pairs that
+        represent the the optimal way to serialize the prefix tree.
+    **/
+    compress: function () {
+        var process     = [],
+            compressed  = [],
+            children,
+            root_re,
+            leaves,
+            weight,
+            total,
+            child,
+            node,
+            key,
+            i;
+
+        // Start with the root node's children
+        for (key in this.tree.children) {
+            if (this.tree.children.hasOwnProperty(key)) {
+                process.push(this.tree.children[key]);
+            }
+        }
+
+
+        while (process.length) {
+            total    = 0;
+            children = [];
+
+            node = process.pop();
+
+            // Account for the length of the root prefix
+            weight = this.rootPrefixLen + node.weight;
+
+            // Find the total resulting weight if we use the children of this
+            // node as roots
+            for (key in node.children) {
+                if (node.children.hasOwnProperty(key)) {
+                    child = node.children[key];
+
+                    // Account for the length of the initial and subsequent
+                    // group delimiters for every additional root
+                    total += children.length ?
+                             this.groupDelimLen + this.rootPrefixLen :  // ;p+
+                             this.rootPrefixLen;                        //  p+
+
+                    total += child.weight;
+
+                    children.push(child);
+                }
+            }
+
+
+            if (weight <= total) {
+                // If the weigth of this node is less than or equal to the
+                // total weight of its child nodes combined, it means that
+                // we'll get better compression by using this node as a root
+
+                root_re = new RegExp('^' + node.path + '/');
+
+                // Now that we've decided to use this node as a root, we can
+                // determine what the module names should be
+                leaves = this.getLeafNodes(node);
+                for (i = 0; i < leaves.length; i += 1) {
+                    compressed.push({
+                        // module name = full path - root
+                        name: leaves[i].path.replace(root_re, ''),
+                        root: node.path
+                    });
+                }
+            } else {
+                // If the weight of this node is greater than the total weight
+                // of its child nodes combined, it means that we'll get better
+                // compression by using each child node as an individual root.
+                process = process.concat(children);
+            }
+        }
+
+
+        return compressed;
+    },
+
+    /**
+    Finds all the leaf nodes of a given node
+    @method getLeafNodes
+    @param {Object} tree A node in the prefix tree
+    @return {Array} All leaf nodes of a particular node
+    **/
+    getLeafNodes: function (tree) {
+        var leaves = [],
+            key;
+
+        // base case
+        if (!tree.children) {
+            leaves.push(tree);
+            return leaves;
+        }
+
+        for (key in tree.children) {
+            if (tree.children.hasOwnProperty(key)) {
+                leaves = leaves.concat(
+                    this.getLeafNodes(
+                        tree.children[key]
+                    )
+                );
+            }
+        }
+
+        return leaves;
+    },
+
+    /**
+    Destroys the instance to free up memory
+    @method destroy
+    **/
+    destroy: function () {
+        this.tree = null;
+    },
+
+    stringify: function (thing) {
+        return JSON && JSON.stringify(thing, null, 4);
+    }
+
 };
 
 /**
@@ -353,7 +600,7 @@ Y.Loader.prototype.resolve = function () {
             // Generate custom combo urls.
             comboUrls = this.customResolve(resolvedMods, type);
 
-            if (JSON) {
+            if (window.JSON) {
             }
 
             resolved[type] = [].concat(comboUrls, singles);

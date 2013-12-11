@@ -5,9 +5,9 @@
     "errors": 0,
     "ignored": 0,
     "total": 0,
-    "duration": 3,
+    "duration": 12,
     "type": "report",
-    "timestamp": "Wed 14 Aug 2013 05:31:58 PM PDT",
+    "timestamp": "Wed Oct  9 15:56:59 2013",
     "coverage": {
         "/build/gallery-bulkedit/gallery-bulkedit.js": {
             "lines": {

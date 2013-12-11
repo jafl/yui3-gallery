@@ -22,6 +22,7 @@ function SelectAllCheckboxGroup(
 	this.select_all_cb.on('click', updateSelectAll, this);
 
 	SelectAllCheckboxGroup.superclass.constructor.call(this, cb_list);
+	this.enforceConstraints(this.cb_list, 0);
 }
 
 function updateSelectAll()
@@ -56,7 +57,7 @@ Y.extend(SelectAllCheckboxGroup, CheckboxGroup,
 	 */
 	toggleSelectAll: function()
 	{
-		this.select_call_cb.set('checked', !this.select_all_cb.get('checked'));
+		this.select_all_cb.set('checked', !this.select_all_cb.get('checked'));
 		updateSelectAll.call(this);
 	},
 
