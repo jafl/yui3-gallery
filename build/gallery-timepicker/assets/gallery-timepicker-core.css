@@ -43,15 +43,7 @@
     text-align: center;
 }
 
-.yui-timepicker li{
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-}
-
-
 .yui-timepicker li.yui-timepicker-active{
     background: #000;
     color: #fff;
-    -moz-box-shadow: 2px 2px 2px #ccc;
-    -webkit-box-shadow: 2px 2px 2px #ccc;
 }

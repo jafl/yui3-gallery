@@ -1,0 +1,24 @@
+{
+    "name": "gallery-timepicker",
+    "builds": {
+        "gallery-timepicker": {
+            "config": {
+                "skinnable": "true",
+                "requires": [
+                    "oop",
+                    "event-custom",
+                    "attribute",
+                    "base",
+                    "dom",
+                    "classnamemanager",
+                    "widget",
+                    "event"
+                ],
+            },
+            "skinnable": "true",
+            "jsfiles": [
+                "timepicker.js"
+            ]
+        }
+    }
+}

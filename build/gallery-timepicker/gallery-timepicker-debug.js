@@ -1,4 +1,4 @@
-YUI.add('gallery-timepicker', function(Y) {
+YUI.add('gallery-timepicker', function (Y, NAME) {
 
 /*
 Copyright (c) 2009, Stephen Woods
@@ -431,4 +431,22 @@ Y.namespace(NAMESPACE +'.'+CONSTRUCTOR);
 Y[NAMESPACE][CONSTRUCTOR] = Timepicker;
 
 
-}, '@VERSION@' ,{requires:['oop', 'event-custom', 'attribute', 'base', 'dom', 'classnamemanager', 'widget', 'event']});
+}, '@VERSION@', {
+    "supersedes": [
+        ""
+    ],
+    "skinnable": "true",
+    "requires": [
+        "oop",
+        "event-custom",
+        "attribute",
+        "base",
+        "dom",
+        "classnamemanager",
+        "widget",
+        "event"
+    ],
+    "optional": [
+        ""
+    ]
+});
