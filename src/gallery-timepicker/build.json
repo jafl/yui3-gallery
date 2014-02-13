@@ -13,7 +13,7 @@
                     "classnamemanager",
                     "widget",
                     "event"
-                ],
+                ]
             },
             "skinnable": "true",
             "jsfiles": [

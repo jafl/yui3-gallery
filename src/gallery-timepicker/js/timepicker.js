@@ -397,17 +397,17 @@ Y.extend(Timepicker, Y.Widget, {
               //get all of the li elements to clear their active state
               this.allCells.removeClass(Timepicker[ACTIVE_CLASS]);
               
-              var m = this._model;
-              var apos = 0;
+              var m = this._model,
+                  offset = m.ampm.AM.getX(),
+                  apos = 0;
               
               //handle ampm row, because of l10n can't count on
               //the value, so instead we use the "constant"
               if(time.ampm == AM){
                   m.ampm.AM.addClass(Timepicker[ACTIVE_CLASS]);
-                  apos = m.ampm.AM.getX();
               }else if(time.ampm == PM){
                   m.ampm.PM.addClass(Timepicker[ACTIVE_CLASS]);
-                  apos = m.ampm.PM.getX();
+                  apos = m.ampm.PM.getX() - offset;
               }
               
               //handle minute row
@@ -417,9 +417,9 @@ Y.extend(Timepicker, Y.Widget, {
               //handle hour row
               m.hour[time.hour].addClass(Timepicker[ACTIVE_CLASS]);
               
-              m.hour.row.setX(apos);
+              m.hour.row.setStyle('margin-left', apos+'px');
 
-              m.minute.row.setX(m.hour[time.hour].getX());
+              m.minute.row.setStyle('margin-left', (m.hour[time.hour].getX() - offset)+'px');
  
           }
       });
