@@ -1,9 +1,12 @@
 .yui3-timepicker{
     display: block;
     margin: 5px;
-    left: 0;
     position: relative;
     background: transparent;
+    color: #000;
+    font-family: verdana;
+    font-size: 13px;
+    text-align: left;
 }
 
 .yui3-timepicker-hidden{
@@ -11,22 +14,14 @@
     position: absolute;
 }
 
-.yui3-timepicker{
-    color: #000;
-    font-family: verdana;
-    text-align: left;
-}
-
 .yui3-timepicker ol{
     display: block;
     position: relative;
-    left: 0;
-    .left: 5px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     height: 24px;
     text-align: left;
-    -webkit-transition: left .1s ease-in;
+    transition: margin-left .1s ease-in;
 }
 
 .yui3-timepicker li{
